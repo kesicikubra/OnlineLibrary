@@ -5,17 +5,11 @@ import com.example.MyOnlineLibrary.contactmessage.payload.response.ContactMessag
 import com.example.MyOnlineLibrary.contactmessage.service.ContactMessageService;
 import com.example.MyOnlineLibrary.payload.response.ResponseMessage;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,9 +18,9 @@ public class ContactMessageController {
 
     private ContactMessageService service;
 
-    @PostMapping
-    private ResponseMessage<ContactMessageResponse> saveContactMessage(@Valid @ModelAttribute ContactMessageRequest contactMessageRequest){
-    return service.saveMessage(contactMessageRequest);
+    @PostMapping("/save")
+  ///  @Operation(tags = "Contact Message",summary = "J01")
+    public ResponseMessage<ContactMessageResponse> save(@RequestBody @Valid ContactMessageRequest contactMessageRequest) {
+        return service.saveMessage(contactMessageRequest);
     }
-
 }

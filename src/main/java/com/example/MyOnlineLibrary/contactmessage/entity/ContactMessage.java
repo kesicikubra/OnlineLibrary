@@ -1,19 +1,18 @@
 package com.example.MyOnlineLibrary.contactmessage.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Builder(toBuilder = true)
 public class ContactMessage {
 
@@ -26,15 +25,23 @@ public class ContactMessage {
     private String message;
 
     @NotNull
-    private LocalDateTime createAt;
-
-    private LocalDateTime updateAt;
-
-    @NotNull
     @Email
     private String eMail;
 
     @Size(max = 50 )
     private String subject;
+
+    @Enumerated(EnumType.STRING)
+    private Status status=Status.UNREAD;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "US")
+    private LocalDateTime createAt;
+
+    private LocalDateTime updateAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createAt = LocalDateTime.now();
+    }
 
 }

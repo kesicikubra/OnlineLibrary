@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 @Repository
-public interface ContactMessageRepostory extends JpaRepository< ContactMessage, UUID> {
+public interface ContactMessageRepository extends JpaRepository<ContactMessage, UUID> {
 }
