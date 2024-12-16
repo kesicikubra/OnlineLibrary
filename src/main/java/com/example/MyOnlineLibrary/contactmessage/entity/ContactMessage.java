@@ -26,7 +26,7 @@ public class ContactMessage {
 
     @NotNull
     @Email
-    private String eMail;
+    private String email;
 
     @Size(max = 50 )
     private String subject;

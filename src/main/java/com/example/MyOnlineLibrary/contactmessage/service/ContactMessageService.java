@@ -7,6 +7,7 @@ import com.example.MyOnlineLibrary.contactmessage.payload.request.ContactMessage
 import com.example.MyOnlineLibrary.contactmessage.payload.response.ContactMessageResponse;
 import com.example.MyOnlineLibrary.contactmessage.repository.ContactMessageRepository;
 import com.example.MyOnlineLibrary.exception.BadRequestException;
+import com.example.MyOnlineLibrary.exception.InvalidDataException;
 import com.example.MyOnlineLibrary.payload.response.ResponseMessage;
 import com.example.MyOnlineLibrary.service.helper.PageableHelper;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,8 @@ public class ContactMessageService {
   }
 
     public ResponseMessage<ContactMessageResponse> getContactMessageById(UUID contactMessageId) {
-     ContactMessage contactMessage = contactMessageRepository.getReferenceById(contactMessageId);
+
+     ContactMessage contactMessage = contactMessageRepository.findById(contactMessageId).orElseThrow(()->new InvalidDataException("Data is invalid"));
         ContactMessageResponse contactMessageResponse = contactMessageMapper.contactMessageToResponse(contactMessage);
         return ResponseMessage.<ContactMessageResponse>builder()
                 .httpStatus(HttpStatus.OK).
@@ -78,4 +80,24 @@ public class ContactMessageService {
                 .build();
     }
 
+    public ResponseMessage<Page<ContactMessageResponse>> searchByEmail(String email, int page, int size, String sort, String type) {
+
+
+
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+
+        Page<ContactMessageResponse> contactMessagesByEmail=contactMessageRepository.findByEmailContainingIgnoreCase(email,pageable)
+                .map(contactMessageMapper::contactMessageToResponse);
+
+        return ResponseMessage.<Page<ContactMessageResponse>>builder()
+                .httpStatus(HttpStatus.OK)
+                .object(contactMessagesByEmail)
+                .build();
+
+
+
+
+
+
+    }
 }

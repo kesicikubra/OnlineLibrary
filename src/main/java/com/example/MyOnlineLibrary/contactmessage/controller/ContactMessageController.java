@@ -16,17 +16,16 @@ import java.util.UUID;
 @RequestMapping("/contactmessages")
 public class ContactMessageController {
 
-    private ContactMessageService service;
+    private ContactMessageService contactMessageService;
 
     @PostMapping
-  ///  @Operation(tags = "Contact Message",summary = "J01")
     public ResponseMessage<ContactMessageResponse> save(@RequestBody @Valid ContactMessageRequest contactMessageRequest) {
-        return service.saveMessage(contactMessageRequest);
+        return contactMessageService.saveMessage(contactMessageRequest);
     }
 
-    @GetMapping
+    @GetMapping("/getById")
     public ResponseMessage<ContactMessageResponse> getById(@RequestParam(value = "contactMessageId") UUID contactMessageId){
-        return service.getContactMessageById(contactMessageId);
+        return contactMessageService.getContactMessageById(contactMessageId);
     }
 
     @GetMapping
@@ -36,7 +35,7 @@ public class ContactMessageController {
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type){
 
-        return service.getAllContactMessagesByPages(page, size, sort, type);
+        return contactMessageService.getAllContactMessagesByPages(page, size, sort, type);
     }
     @GetMapping("/status")
     public ResponseMessage<Page<ContactMessageResponse>>  getAllContactMessagesByPages(
@@ -47,8 +46,25 @@ public class ContactMessageController {
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
             @RequestParam(value = "type", defaultValue = "desc") String type){
 
-        return service.getAllContactMessagesWithStatusByPages(q,status,page,size,sort,type);
+        return contactMessageService.getAllContactMessagesWithStatusByPages(q,status,page,size,sort,type);
     }
+
+    @GetMapping("/searchByEmail")
+    public ResponseMessage<Page<ContactMessageResponse>>searchByEmail(
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
+            @RequestParam(value = "type", defaultValue = "desc") String type
+    ){
+        return contactMessageService.searchByEmail(email,page,size,sort,type);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseMessage<ContactMessageResponse> getByIdParam(@PathVariable(name = "id") UUID contactMessageId){
+        return contactMessageService.getContactMessageById(contactMessageId) ;
+    }
+
 
 
 
